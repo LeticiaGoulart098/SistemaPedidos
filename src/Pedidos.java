@@ -1,16 +1,15 @@
 public class Pedidos {
-    String Pessoa;
-    String pedido;
-    double valor;
-    double total;
-
+    private String pessoa;
+    private String pedido;
+    private double valor;
+    private double total;
 
     public String getPessoa() {
-        return Pessoa;
+        return pessoa;
     }
 
     public void setPessoa(String pessoa) {
-        Pessoa = pessoa;
+        this.pessoa = pessoa;
     }
 
     public String getPedido() {
@@ -25,28 +24,47 @@ public class Pedidos {
         return valor;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-
     public double getTotal() {
         return total;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
     public Pedidos() {
-        this.pedido = pedido;
-        this.total = total;
-        this.valor = valor;
+        this.pedido = "";
+        this.valor = 0.0;
+        this.total = 0.0;
     }
 
-    public void realizarPedido() {
-        pedido = pedido + valor + total;
-
+    public boolean realizarPedido() {
+        return pedido != null && !pedido.isEmpty();
     }
 
+    public void valorPedido() {
+        switch (pedido) {
+            case "Bolo de Brigadeiro":
+                valor = 25.99;
+                break;
+            case "Bolo Vulcão de Leite Ninho":
+                valor = 39.99;
+                break;
+            case "Brownie Fatia":
+                valor = 12.00;
+                break;
+            case "Cupcake Unidade":
+                valor = 7.99;
+                break;
+            case "Copo da Felicidade":
+                valor = 18.99;
+                break;
+            case "Pudim":
+                valor = 45.00;
+                break;
+            default:
+                System.out.println("Pedido inválido.");
+                return;
+        }
 
+        total += valor;
+        System.out.println("O valor do seu pedido foi: R$ " + valor);
+        System.out.println("O total do seu pedido é: R$ " + total);
+    }
 }
