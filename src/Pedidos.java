@@ -1,9 +1,20 @@
+import java.util.Objects;
+
 public class Pedidos {
     private String pessoa;
     private String pedido;
     private double valor;
-    private double total;
+    private int quantidade;
+    private String pagamento;
 
+    public Pedidos() {
+        this.pedido = "";
+        this.valor = 0.0;
+        this.quantidade = 1;
+        this.pagamento = "";
+    }
+
+    // Getters e Setters
     public String getPessoa() {
         return pessoa;
     }
@@ -24,18 +35,50 @@ public class Pedidos {
         return valor;
     }
 
-    public double getTotal() {
-        return total;
+    public void setValor(double valor) {
+        this.valor = valor;
     }
 
-    public Pedidos() {
-        this.pedido = "";
-        this.valor = 0.0;
-        this.total = 0.0;
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public String getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(String pagamento) {
+        this.pagamento = pagamento;
+    }
+
+    public double getTotal() {
+        return valor * quantidade;
     }
 
     public boolean realizarPedido() {
         return pedido != null && !pedido.isEmpty();
+    }
+
+    public void formaPagamento() {
+        switch (pagamento) {
+            case "1":
+                System.out.println("Forma de pagamento: Crédito");
+                break;
+            case "2":
+                System.out.println("Forma de pagamento: Débito");
+                break;
+            case "3":
+                System.out.println("Forma de pagamento: Dinheiro");
+                break;
+            default:
+                System.out.println("Opção de pagamento inválida!");
+                return;
+        }
+        System.out.println("Pagamento realizado com sucesso!");
     }
 
     public void valorPedido() {
@@ -60,11 +103,26 @@ public class Pedidos {
                 break;
             default:
                 System.out.println("Pedido inválido.");
+                valor = 0.0;
                 return;
         }
+    }
 
-        total += valor;
-        System.out.println("O valor do seu pedido foi: R$ " + valor);
-        System.out.println("O total do seu pedido é: R$ " + total);
+    public void finalizarPedido() {
+        if (!realizarPedido()) {
+            System.out.println("Nenhum pedido foi realizado.");
+            return;
+        }
+
+        valorPedido(); // Define o valor com base no pedido
+        double total = getTotal();
+
+        System.out.println("Cliente: " + pessoa);
+        System.out.println("Pedido: " + pedido);
+        System.out.println("Quantidade: " + quantidade);
+        System.out.printf("Valor unitário: R$ %.2f\n", valor);
+        System.out.printf("Total do pedido: R$ %.2f\n", total);
+
+        formaPagamento(); // Exibe forma de pagamento e valida
     }
 }
