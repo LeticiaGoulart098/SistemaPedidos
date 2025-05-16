@@ -7,8 +7,7 @@ public class Main {
         String op;
 
         Pessoa cliente1 = null;
-        Pedidos pedido1 = new Pedidos();
-        ArrayList<Pedidos> listapedidos = new ArrayList<Pedidos>();
+        ArrayList<Pedidos> listapedidos = new ArrayList<>();
 
         System.out.println("------------ Mel&Maya Doces --------------");
 
@@ -24,8 +23,8 @@ public class Main {
 
             switch (op) {
                 case "1":
-                    System.out.println("Cardápio:\n- Bolo de Brigadeiro - R$ 25,99\n- Bolo Vulcão de Leite Ninho R$ 39,99\n" +
-                            "- Brownie Fatia R$ 12,00\n- Cupcake Unidade R$ 7,99\n- Copo da Felicidade - R$ 18,99\n- Pudim - R$ 45,00");
+                    System.out.println("Cardápio:\n- Bolo de Brigadeiro - R$ 25,99\n- Bolo Vulcão de Leite Ninho - R$ 39,99\n" +
+                            "- Brownie Fatia - R$ 12,00\n- Cupcake Unidade - R$ 7,99\n- Copo da Felicidade - R$ 18,99\n- Pudim - R$ 45,00");
                     break;
 
                 case "2":
@@ -40,45 +39,53 @@ public class Main {
                         cliente1.setEmail(scanner.nextLine());
                         System.out.print("Digite o seu endereço: ");
                         cliente1.setEndereco(scanner.nextLine());
-
-                        pedido1.setPessoa(cliente1.getNome()); // associa cliente ao pedido
                     }
 
-                    System.out.println("Escolha o seu pedido:");
-                    System.out.println("1 - Bolo de Brigadeiro");
-                    System.out.println("2 - Bolo Vulcão de Leite Ninho");
-                    System.out.println("3 - Brownie Fatia");
-                    System.out.println("4 - Cupcake Unidade");
-                    System.out.println("5 - Copo da Felicidade");
-                    System.out.println("6 - Pudim");
-                    System.out.print("Opção: ");
+                    boolean continuar = true;
+                    do {
+                        System.out.println("Escolha o seu pedido:");
+                        System.out.println("1 - Bolo de Brigadeiro");
+                        System.out.println("2 - Bolo Vulcão de Leite Ninho");
+                        System.out.println("3 - Brownie Fatia");
+                        System.out.println("4 - Cupcake Unidade");
+                        System.out.println("5 - Copo da Felicidade");
+                        System.out.println("6 - Pudim");
+                        System.out.print("Opção: ");
+                        int opcao = scanner.nextInt();
+                        scanner.nextLine(); // limpar buffer
 
-                    int opcao = scanner.nextInt();
-                    scanner.nextLine(); // limpa buffer
+                        String item = switch (opcao) {
+                            case 1 -> "Bolo de Brigadeiro";
+                            case 2 -> "Bolo Vulcão de Leite Ninho";
+                            case 3 -> "Brownie Fatia";
+                            case 4 -> "Cupcake Unidade";
+                            case 5 -> "Copo da Felicidade";
+                            case 6 -> "Pudim";
+                            default -> "";
+                        };
 
-                    String pedido = switch (opcao) {
-                        case 1 -> "Bolo de Brigadeiro";
-                        case 2 -> "Bolo Vulcão de Leite Ninho";
-                        case 3 -> "Brownie Fatia";
-                        case 4 -> "Cupcake Unidade";
-                        case 5 -> "Copo da Felicidade";
-                        case 6 -> "Pudim";
-                        default -> "";
-                    };
+                        if (item.isEmpty()) {
+                            System.out.println("Opção inválida.");
+                            continue;
+                        }
 
-                    if (pedido.isEmpty()) {
-                        System.out.println("Opção inválida.");
-                        break;
-                    }
+                        Pedidos novoPedido = new Pedidos();
+                        novoPedido.setPessoa(cliente1.getNome());
+                        novoPedido.setPedido(item);
+                        System.out.print("Quantidade: ");
+                        novoPedido.setQuantidade(scanner.nextInt());
+                        novoPedido.setValor(scanner.nextDouble());
+                        scanner.nextLine(); // limpar buffer
 
+                        listapedidos.add(novoPedido);
 
-                    pedido1.setPedido(pedido);
-                    listapedidos.add(pedido1);
-                    System.out.print("Quantidade: ");
-                    pedido1.setQuantidade(scanner.nextInt());
-                    scanner.nextLine(); // limpa buffer
+                        System.out.println("Pedido adicionado com sucesso!");
 
-                    System.out.println("Pedido adicionado com sucesso!");
+                        System.out.print("Deseja adicionar mais itens? (s/n): ");
+                        String resposta = scanner.nextLine();
+                        continuar = resposta.equalsIgnoreCase("s");
+
+                    } while (continuar);
                     break;
 
                 case "3":
@@ -86,22 +93,28 @@ public class Main {
                     break;
 
                 case "4":
-                    if (!pedido1.realizarPedido()) {
+                    if (listapedidos.isEmpty()) {
                         System.out.println("Nenhum pedido foi feito ainda.");
                         break;
                     }
 
-                    System.out.print("O valor total do seu pedido: " + pedido1.getTotal());
-                    System.out.println("Escolha a forma de pagamento: ");
+                    double total = 0;
+                    System.out.println("\n--- Resumo do Pedido ---");
+                    for (Pedidos p : listapedidos) {
+                        double subtotal = p.getQuantidade() * p.getValor();
+                        total += subtotal;
+                        System.out.println(p.getQuantidade() + "x " + p.getPedido() + " - R$ " + p.getValor() + " (Subtotal: R$ " + subtotal + ")");
+                    }
+                    System.out.printf("Total: R$ %.2f\n", total);
+
+                    System.out.println("\nEscolha a forma de pagamento: ");
                     System.out.println("1 - Crédito");
                     System.out.println("2 - Débito");
                     System.out.println("3 - Pix");
                     System.out.print("Opção: ");
-                    String fp = scanner.nextLine();
+                    String pagamento = scanner.nextLine();
 
-
-                    pedido1.setPagamento(fp);
-                    pedido1.finalizarPedido();
+                    System.out.println("Pagamento realizado via " + pagamento + ". Pedido finalizado!");
                     break;
 
                 case "5":
@@ -115,3 +128,5 @@ public class Main {
         }
     }
 }
+
+
