@@ -1,20 +1,18 @@
-import java.util.Objects;
-
 public class Pedidos {
     private String pessoa;
     private String pedido;
-    private double valor;
+    private double valor; // representa o total do pedido (quantidade * preço unitário)
     private int quantidade;
     private String pagamento;
 
     public Pedidos() {
         this.pedido = "";
         this.valor = 0.0;
-        this.quantidade = 1;
+        this.quantidade = 0;
         this.pagamento = "";
     }
 
-    // Getters e Setters
+
     public String getPessoa() {
         return pessoa;
     }
@@ -56,7 +54,7 @@ public class Pedidos {
     }
 
     public double getTotal() {
-        return valor * quantidade;
+        return valor; // valor já representa total calculado
     }
 
     public boolean realizarPedido() {
@@ -72,7 +70,7 @@ public class Pedidos {
                 System.out.println("Forma de pagamento: Débito");
                 break;
             case "3":
-                System.out.println("Forma de pagamento: Dinheiro");
+                System.out.println("Forma de pagamento: Pix");
                 break;
             default:
                 System.out.println("Opção de pagamento inválida!");
@@ -82,30 +80,32 @@ public class Pedidos {
     }
 
     public void valorPedido() {
+        double precoUnitario = 0;
         switch (pedido) {
             case "Bolo de Brigadeiro":
-                valor = 25.99;
+                precoUnitario = 25.99;
                 break;
             case "Bolo Vulcão de Leite Ninho":
-                valor = 39.99;
+                precoUnitario = 39.99;
                 break;
             case "Brownie Fatia":
-                valor = 12.00;
+                precoUnitario = 12.00;
                 break;
             case "Cupcake Unidade":
-                valor = 7.99;
+                precoUnitario = 7.99;
                 break;
             case "Copo da Felicidade":
-                valor = 18.99;
+                precoUnitario = 18.99;
                 break;
             case "Pudim":
-                valor = 45.00;
+                precoUnitario = 45.00;
                 break;
             default:
                 System.out.println("Pedido inválido.");
                 valor = 0.0;
                 return;
         }
+        valor = precoUnitario * quantidade;
     }
 
     public void finalizarPedido() {
@@ -114,14 +114,12 @@ public class Pedidos {
             return;
         }
 
-        valorPedido(); // Define o valor com base no pedido
-        double total = getTotal();
+        valorPedido();
 
         System.out.println("Cliente: " + pessoa);
         System.out.println("Pedido: " + pedido);
         System.out.println("Quantidade: " + quantidade);
-        System.out.printf("Valor unitário: R$ %.2f\n", valor);
-        System.out.printf("Total do pedido: R$ %.2f\n", total);
+        System.out.printf("Valor total do pedido: R$ %.2f\n", valor);
 
         formaPagamento(); // Exibe forma de pagamento e valida
     }
